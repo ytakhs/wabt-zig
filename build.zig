@@ -23,6 +23,16 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    lib.addIncludePath("deps/wabt/include");
+    lib.addIncludePath("deps/wabt/out/clang/Release/include");
+    lib.addCSourceFiles(&[_][]const u8{
+        "deps/wabt/src/emscripten-helpers.cc",
+    }, &[_][]const u8{
+        "-I/usr/include/c++/11",
+        "-I/usr/include/x86_64-linux-gnu/c++/11",
+        "-I/usr/include",
+        "-std=c++17",
+    });
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
