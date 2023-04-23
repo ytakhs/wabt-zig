@@ -10,5 +10,5 @@ test "basic add functionality" {
 }
 
 test {
-    _ = @import("./wabt.zig");
+    _ = @import("./wabt_bindings.zig");
 }
