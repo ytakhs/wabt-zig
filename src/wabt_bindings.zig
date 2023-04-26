@@ -130,3 +130,40 @@ test "read binary" {
     // exclude null string from output_ptr
     try std.testing.expectEqualSlices(u8, output_ptr[0 .. output_len - 1], "(module)");
 }
+
+test "read wat" {
+    const wat = "(module)";
+    const wat_len = wat.len;
+
+    const features = wabt_new_features();
+    defer wabt_destroy_features(features);
+
+    const errors = wabt_new_errors();
+    defer wabt_destroy_errors(errors);
+
+    const wast_lexer = wabt_new_wast_buffer_lexer("test.wat", wat[0..], wat_len, errors);
+    defer wabt_destroy_wast_lexer(wast_lexer);
+
+    const parse_wat_result = wabt_parse_wat(wast_lexer, features, errors);
+    defer wabt_destroy_parse_wat_result(parse_wat_result);
+
+    const parse_wat_result_enum = wabt_parse_wat_result_get_result(parse_wat_result);
+    try std.testing.expect(parse_wat_result_enum == WabtResultEnum.Ok);
+
+    const module = wabt_parse_wat_result_release_module(parse_wat_result);
+    defer wabt_destroy_module(module);
+
+    const write_text_module = wabt_write_text_module(module, 0, 0);
+    defer wabt_destroy_write_module_result(write_text_module);
+
+    const write_text_module_result_enum = wabt_write_module_result_get_result(write_text_module);
+    try std.testing.expect(write_text_module_result_enum == WabtResultEnum.Ok);
+
+    const output_buffer = wabt_write_module_result_release_output_buffer(write_text_module);
+    defer wabt_destroy_output_buffer(output_buffer);
+
+    const output_ptr = wabt_output_buffer_get_data(output_buffer);
+    const output_len = wabt_output_buffer_get_size(output_buffer);
+    // exclude null string from output_ptr
+    try std.testing.expectEqualSlices(u8, output_ptr[0 .. output_len - 1], "(module)");
+}
