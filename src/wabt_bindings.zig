@@ -111,7 +111,7 @@ test "read binary" {
     defer wabt_destroy_read_binary_result(read_binary_result);
 
     const read_biary_result_enum = wabt_read_binary_result_get_result(read_binary_result);
-    try std.testing.expect(read_biary_result_enum == WabtResultEnum.Ok);
+    try std.testing.expect(WabtResultEnum.Ok == read_biary_result_enum);
 
     const module = wabt_read_binary_result_release_module(read_binary_result);
     defer wabt_destroy_module(module);
@@ -120,7 +120,7 @@ test "read binary" {
     defer wabt_destroy_write_module_result(write_text_module);
 
     const write_text_module_result_enum = wabt_write_module_result_get_result(write_text_module);
-    try std.testing.expect(write_text_module_result_enum == WabtResultEnum.Ok);
+    try std.testing.expect(WabtResultEnum.Ok == write_text_module_result_enum);
 
     const output_buffer = wabt_write_module_result_release_output_buffer(write_text_module);
     defer wabt_destroy_output_buffer(output_buffer);
@@ -128,7 +128,7 @@ test "read binary" {
     const output_ptr = wabt_output_buffer_get_data(output_buffer);
     const output_len = wabt_output_buffer_get_size(output_buffer);
     // exclude null string from output_ptr
-    try std.testing.expectEqualSlices(u8, output_ptr[0 .. output_len - 1], "(module)");
+    try std.testing.expectEqualSlices(u8, "(module)", output_ptr[0 .. output_len - 1]);
 }
 
 test "read wat" {
@@ -148,7 +148,7 @@ test "read wat" {
     defer wabt_destroy_parse_wat_result(parse_wat_result);
 
     const parse_wat_result_enum = wabt_parse_wat_result_get_result(parse_wat_result);
-    try std.testing.expect(parse_wat_result_enum == WabtResultEnum.Ok);
+    try std.testing.expect(WabtResultEnum.Ok == parse_wat_result_enum);
 
     const module = wabt_parse_wat_result_release_module(parse_wat_result);
     defer wabt_destroy_module(module);
@@ -157,7 +157,7 @@ test "read wat" {
     defer wabt_destroy_write_module_result(write_text_module);
 
     const write_text_module_result_enum = wabt_write_module_result_get_result(write_text_module);
-    try std.testing.expect(write_text_module_result_enum == WabtResultEnum.Ok);
+    try std.testing.expect(WabtResultEnum.Ok == write_text_module_result_enum);
 
     const output_buffer = wabt_write_module_result_release_output_buffer(write_text_module);
     defer wabt_destroy_output_buffer(output_buffer);
@@ -165,5 +165,5 @@ test "read wat" {
     const output_ptr = wabt_output_buffer_get_data(output_buffer);
     const output_len = wabt_output_buffer_get_size(output_buffer);
     // exclude null string from output_ptr
-    try std.testing.expectEqualSlices(u8, output_ptr[0 .. output_len - 1], "(module)");
+    try std.testing.expectEqualSlices(u8, "(module)", output_ptr[0 .. output_len - 1]);
 }
