@@ -1,5 +1,6 @@
 const std = @import("std");
 const bindings = @import("./wabt_bindings.zig");
+const wabt_features = @import("./wabt_bindings/features.zig");
 
 pub const OutputBuffer = @This();
 
@@ -28,8 +29,8 @@ test {
         0x01, 0x00, 0x00, 0x00,
     };
 
-    const features = bindings.wabt_new_features();
-    defer bindings.wabt_destroy_features(features);
+    const features = wabt_features.wabt_new_features();
+    defer wabt_features.wabt_destroy_features(features);
 
     const errors = bindings.wabt_new_errors();
     defer bindings.wabt_destroy_errors(errors);

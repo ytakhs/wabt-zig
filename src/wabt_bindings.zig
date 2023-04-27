@@ -1,6 +1,6 @@
 const std = @import("std");
+const wabt_features = @import("./wabt_bindings/features.zig");
 
-pub const WabtFeatures = extern struct {};
 pub const WabtErrors = extern struct {};
 pub const WabtResultEnum = enum(c_int) {
     Ok,
@@ -16,8 +16,6 @@ pub const WabtWriteScriptResult = extern struct {};
 pub const WabtWriteModuleResult = extern struct {};
 pub const WabtOutputBuffer = extern struct {};
 
-pub extern fn wabt_new_features() *WabtFeatures;
-pub extern fn wabt_destroy_features(features: *WabtFeatures) void;
 pub extern fn wabt_new_wast_buffer_lexer(
     filename: [*:0]const u8,
     data: [*:0]const u8,
@@ -26,29 +24,29 @@ pub extern fn wabt_new_wast_buffer_lexer(
 ) *WabtWastLexer;
 pub extern fn wabt_parse_wat(
     lexer: *WabtWastLexer,
-    features: *WabtFeatures,
+    features: *wabt_features.WabtFeatures,
     errors: *WabtErrors,
 ) *WabtParseWatResult;
 pub extern fn wabt_parse_wast(
     lexer: *WabtWastLexer,
-    features: *WabtFeatures,
+    features: *wabt_features.WabtFeatures,
     errors: *WabtErrors,
 ) *WabtParseWastResult;
 pub extern fn wabt_read_binary(
     data: [*:0]const u8,
     size: usize,
     read_debug_names: c_int,
-    features: *WabtFeatures,
+    features: *wabt_features.WabtFeatures,
     errors: *WabtErrors,
 ) *WabtReadBinaryResult;
 pub extern fn wabt_validate_module(
     module: *WabtModule,
-    features: *WabtFeatures,
+    features: *wabt_features.WabtFeatures,
     errors: *WabtErrors,
 ) void;
 pub extern fn wabt_validate_script(
     script: *WabtScript,
-    features: *WabtFeatures,
+    features: *wabt_features.WabtFeatures,
     errors: *WabtErrors,
 ) void;
 pub extern fn wabt_write_binary_spec_script(script: *WabtScript, source_filename: [*:0]const u8, out_filename: [*:0]const u8, log: c_int, canonicalize_lebs: c_int, relocatable: c_int, write_debug_names: c_int) *WabtWriteScriptResult;
@@ -101,8 +99,8 @@ test "read binary" {
         0x01, 0x00, 0x00, 0x00,
     };
 
-    const features = wabt_new_features();
-    defer wabt_destroy_features(features);
+    const features = wabt_features.wabt_new_features();
+    defer wabt_features.wabt_destroy_features(features);
 
     const errors = wabt_new_errors();
     defer wabt_destroy_errors(errors);
@@ -135,8 +133,8 @@ test "read wat" {
     const wat = "(module)";
     const wat_len = wat.len;
 
-    const features = wabt_new_features();
-    defer wabt_destroy_features(features);
+    const features = wabt_features.wabt_new_features();
+    defer wabt_features.wabt_destroy_features(features);
 
     const errors = wabt_new_errors();
     defer wabt_destroy_errors(errors);
