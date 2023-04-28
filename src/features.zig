@@ -1,18 +1,18 @@
 const std = @import("std");
-const features = @import("./wabt_bindings/features.zig");
+const bindings = @import("./wabt_bindings.zig");
 
 pub const Features = @This();
 
-raw: *features.WabtFeatures,
+raw: *bindings.WabtFeatures,
 
 pub fn init() Features {
     return .{
-        .raw = features.wabt_new_features(),
+        .raw = bindings.wabt_new_features(),
     };
 }
 
 pub fn deinit(self: *Features) void {
-    features.wabt_destroy_features(self.raw);
+    bindings.wabt_destroy_features(self.raw);
 }
 
 fn bool2CInt(b: bool) c_int {
@@ -20,11 +20,11 @@ fn bool2CInt(b: bool) c_int {
 }
 
 pub fn getExceptionsEnabled(self: *Features) bool {
-    return features.wabt_exceptions_enabled(self.raw);
+    return bindings.wabt_exceptions_enabled(self.raw);
 }
 
 pub fn setExceptionsEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_exceptions_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_exceptions_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "exceptions" {
@@ -37,11 +37,11 @@ test "exceptions" {
 }
 
 pub fn getMutableGlobalsEnabled(self: *Features) bool {
-    return features.wabt_mutable_globals_enabled(self.raw);
+    return bindings.wabt_mutable_globals_enabled(self.raw);
 }
 
 pub fn setMutableGlobalsEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_mutable_globals_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_mutable_globals_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "mutable-globals" {
@@ -54,11 +54,11 @@ test "mutable-globals" {
 }
 
 pub fn getSatFloatToIntEnabled(self: *Features) bool {
-    return features.wabt_sat_float_to_int_enabled(self.raw);
+    return bindings.wabt_sat_float_to_int_enabled(self.raw);
 }
 
 pub fn setSatFloatToIntEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_sat_float_to_int_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_sat_float_to_int_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "sat-float-to-int" {
@@ -71,11 +71,11 @@ test "sat-float-to-int" {
 }
 
 pub fn getSignExtensionEnabled(self: *Features) bool {
-    return features.wabt_sign_extension_enabled(self.raw);
+    return bindings.wabt_sign_extension_enabled(self.raw);
 }
 
 pub fn setSignExtensionEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_sign_extension_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_sign_extension_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "sign-extension" {
@@ -88,11 +88,11 @@ test "sign-extension" {
 }
 
 pub fn getSIMDEnabled(self: *Features) bool {
-    return features.wabt_simd_enabled(self.raw);
+    return bindings.wabt_simd_enabled(self.raw);
 }
 
 pub fn setSIMDEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_simd_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_simd_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "simd" {
@@ -105,11 +105,11 @@ test "simd" {
 }
 
 pub fn getThreadsEnabled(self: *Features) bool {
-    return features.wabt_threads_enabled(self.raw);
+    return bindings.wabt_threads_enabled(self.raw);
 }
 
 pub fn setThreadsEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_threads_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_threads_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "threads" {
@@ -122,11 +122,11 @@ test "threads" {
 }
 
 pub fn getFunctionReferencesEnabled(self: *Features) bool {
-    return features.wabt_function_references_enabled(self.raw);
+    return bindings.wabt_function_references_enabled(self.raw);
 }
 
 pub fn setFunctionReferencesEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_function_references_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_function_references_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "function-references" {
@@ -139,11 +139,11 @@ test "function-references" {
 }
 
 pub fn getMultiValueEnabled(self: *Features) bool {
-    return features.wabt_multi_value_enabled(self.raw);
+    return bindings.wabt_multi_value_enabled(self.raw);
 }
 
 pub fn setMultiValueEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_multi_value_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_multi_value_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "multi-value" {
@@ -156,11 +156,11 @@ test "multi-value" {
 }
 
 pub fn getTailCallEnabled(self: *Features) bool {
-    return features.wabt_tail_call_enabled(self.raw);
+    return bindings.wabt_tail_call_enabled(self.raw);
 }
 
 pub fn setTailCallEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_tail_call_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_tail_call_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "tail-call" {
@@ -173,11 +173,11 @@ test "tail-call" {
 }
 
 pub fn getBulkMemoryEnabled(self: *Features) bool {
-    return features.wabt_bulk_memory_enabled(self.raw);
+    return bindings.wabt_bulk_memory_enabled(self.raw);
 }
 
 pub fn setBulkMemoryEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_bulk_memory_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_bulk_memory_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "bulk-memory" {
@@ -190,11 +190,11 @@ test "bulk-memory" {
 }
 
 pub fn getReferenceTypesEnabled(self: *Features) bool {
-    return features.wabt_reference_types_enabled(self.raw);
+    return bindings.wabt_reference_types_enabled(self.raw);
 }
 
 pub fn setReferenceTypesEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_reference_types_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_reference_types_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "reference-types" {
@@ -207,11 +207,11 @@ test "reference-types" {
 }
 
 pub fn getAnnotationsEnabled(self: *Features) bool {
-    return features.wabt_annotations_enabled(self.raw);
+    return bindings.wabt_annotations_enabled(self.raw);
 }
 
 pub fn setAnnotationsEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_annotations_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_annotations_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "annotations" {
@@ -224,11 +224,11 @@ test "annotations" {
 }
 
 pub fn getCodeMetadataEnabled(self: *Features) bool {
-    return features.wabt_code_metadata_enabled(self.raw);
+    return bindings.wabt_code_metadata_enabled(self.raw);
 }
 
 pub fn setCodeMetadataEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_code_metadata_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_code_metadata_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "code-metadata" {
@@ -241,11 +241,11 @@ test "code-metadata" {
 }
 
 pub fn getGCEnabled(self: *Features) bool {
-    return features.wabt_gc_enabled(self.raw);
+    return bindings.wabt_gc_enabled(self.raw);
 }
 
 pub fn setGCEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_gc_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_gc_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "gc" {
@@ -258,11 +258,11 @@ test "gc" {
 }
 
 pub fn getMemory64Enabled(self: *Features) bool {
-    return features.wabt_memory64_enabled(self.raw);
+    return bindings.wabt_memory64_enabled(self.raw);
 }
 
 pub fn setMemory64Enabled(self: *Features, enabled: bool) void {
-    features.wabt_set_memory64_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_memory64_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "memory64" {
@@ -275,11 +275,11 @@ test "memory64" {
 }
 
 pub fn getMultiMemoryEnabled(self: *Features) bool {
-    return features.wabt_multi_memory_enabled(self.raw);
+    return bindings.wabt_multi_memory_enabled(self.raw);
 }
 
 pub fn setMultiMemoryEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_multi_memory_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_multi_memory_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "multi-memory" {
@@ -292,11 +292,11 @@ test "multi-memory" {
 }
 
 pub fn getExtendedConstEnabled(self: *Features) bool {
-    return features.wabt_extended_const_enabled(self.raw);
+    return bindings.wabt_extended_const_enabled(self.raw);
 }
 
 pub fn setExtendedConstEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_extended_const_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_extended_const_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "extended-const" {
@@ -309,11 +309,11 @@ test "extended-const" {
 }
 
 pub fn getRelaxedSimdEnabled(self: *Features) bool {
-    return features.wabt_relaxed_simd_enabled(self.raw);
+    return bindings.wabt_relaxed_simd_enabled(self.raw);
 }
 
 pub fn setRelaxedSimdEnabled(self: *Features, enabled: bool) void {
-    features.wabt_set_relaxed_simd_enabled(self.raw, bool2CInt(enabled));
+    bindings.wabt_set_relaxed_simd_enabled(self.raw, bool2CInt(enabled));
 }
 
 test "relaxed-simd" {
