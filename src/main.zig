@@ -11,5 +11,6 @@ test "basic add functionality" {
 
 test {
     _ = @import("./wabt_bindings.zig");
+    _ = @import("./wabt_bindings/features.zig");
     _ = @import("./output_buffer.zig");
 }
