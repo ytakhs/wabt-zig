@@ -10,10 +10,10 @@ pub fn init(raw: *bindings.WabtOutputBuffer) OutputBuffer {
 }
 
 pub fn getData(self: *OutputBuffer) []const u8 {
-    const ptr = bindings.wabt_output_buffer_get_data(self.raw);
+    const ptr: [*:0]const u8 = bindings.wabt_output_buffer_get_data(self.raw);
     const len = bindings.wabt_output_buffer_get_size(self.raw);
 
-    return ptr[0 .. len - 1];
+    return ptr[0..len];
 }
 
 pub fn deinit(self: *OutputBuffer) void {
@@ -48,5 +48,5 @@ test {
     var ob = OutputBuffer.init(output_buffer);
     defer ob.deinit();
 
-    try std.testing.expectEqualSlices(u8, "(module)", ob.getData());
+    try std.testing.expectEqualSlices(u8, "(module)\n", ob.getData());
 }

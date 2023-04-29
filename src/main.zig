@@ -13,4 +13,5 @@ test {
     _ = @import("./wabt_bindings.zig");
     _ = @import("./features.zig");
     _ = @import("./output_buffer.zig");
+    _ = @import("./errors.zig");
 }
