@@ -14,4 +14,5 @@ test {
     _ = @import("./features.zig");
     _ = @import("./output_buffer.zig");
     _ = @import("./errors.zig");
+    _ = @import("./lexer.zig");
 }
