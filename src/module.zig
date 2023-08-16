@@ -1,5 +1,8 @@
 const std = @import("std");
 const bindings = @import("./wabt_bindings.zig");
+const features = @import("./features.zig");
+const errors = @import("./errors.zig");
+const lexer = @import("./lexer.zig");
 
 pub const Module = @This();
 const ModuleError = error{
@@ -7,11 +10,14 @@ const ModuleError = error{
     GenerateModuleError,
 };
 
-raw: *bindings.WabtModule,
+module: *bindings.WabtModule,
+features: features.Features,
 
-pub fn init(raw: *bindings.WabtModule) Module {
+pub fn init(filename: [*:0]const u8, data: [*:0]const u8) !Module {
+    const l = lexer.Lexer.init(filename, data);
+
     return .{
-        .raw = raw,
+        .lexer = l,
     };
 }
 
