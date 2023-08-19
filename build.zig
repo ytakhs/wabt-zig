@@ -54,9 +54,9 @@ fn injectDeps(step: *std.build.CompileStep) void {
     step.linkLibC();
     step.linkLibCpp();
 
-    step.addIncludePath("deps/wabt/include");
-    step.addIncludePath("deps/wabt/out/clang/Release/include");
-    step.addCSourceFile("deps/wabt/src/opcode-code-table.c", &[_][]const u8{});
+    step.addIncludePath(std.build.LazyPath.relative("deps/wabt/include"));
+    step.addIncludePath(std.build.LazyPath.relative("deps/wabt/out/clang/Release/include"));
+    step.addCSourceFile(.{ .file = std.build.LazyPath.relative("deps/wabt/src/opcode-code-table.c"), .flags = &[_][]const u8{} });
     step.addCSourceFiles(&[_][]const u8{
         "deps/wabt/src/apply-names.cc",
         "deps/wabt/src/binary.cc",
