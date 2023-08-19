@@ -45,10 +45,17 @@ pub fn deinit(self: *Lexer) void {
     self.errors.deinit();
 }
 
-pub fn parseWat(self: *Lexer, f: *features.Features) ParseWatResult {
+pub fn parseWat(self: *Lexer, f: *features.Features) LexerError!module.Module {
     const parse_wat_result = bindings.wabt_parse_wat(self.raw, f.raw, self.errors.raw);
 
-    return ParseWatResult.init(parse_wat_result);
+    var result = ParseWatResult.init(parse_wat_result);
+    if (!result.isOK()) {
+        return LexerError.ParseWatError;
+    }
+
+    const mod = bindings.wabt_parse_wat_result_release_module(result.raw);
+
+    return module.Module.init(mod);
 }
 
 test "parseWat" {
@@ -59,7 +66,7 @@ test "parseWat" {
     var lexer = Lexer.init(filename, data);
     defer lexer.deinit();
 
-    var result = lexer.parseWat(&f);
+    var result = try lexer.parseWat(&f);
 
-    try std.testing.expect(result.isOK());
+    try std.testing.expectEqualStrings("module", @typeName(@TypeOf(result)));
 }
