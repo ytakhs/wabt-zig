@@ -22,7 +22,7 @@ const Output = struct {
     }
 
     pub fn getData(self: *Output) []const u8 {
-        return self.data[0 .. self.size - 1];
+        return self.data[0..self.size];
     }
 };
 
@@ -69,8 +69,7 @@ test "wat2Wasm" {
     defer mod.deinit();
 
     var out = try mod.wat2Wasm();
-    const actual = out.getData();
-    try std.testing.expectEqualStrings("\x00\x61\x73\x6d\x01\x00\x00", actual);
+    try std.testing.expectEqualStrings("\x00\x61\x73\x6d\x01\x00\x00\x00", out.getData());
 }
 
 pub fn applyNames(self: *Module) ModuleError!void {
