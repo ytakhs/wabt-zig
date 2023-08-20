@@ -1,10 +1,10 @@
 const std = @import("std");
 const bindings = @import("./wabt_bindings.zig");
-const features = @import("./features.zig");
+const Features = @import("./features.zig").Features;
+const Lexer = @import("./lexer.zig").Lexer;
 const errors = @import("./errors.zig");
-const lexer = @import("./lexer.zig");
 
-const Output = struct {
+pub const Output = struct {
     buf: *bindings.WabtOutputBuffer,
     data: [*:0]const u8,
     size: usize,
@@ -31,16 +31,35 @@ const ModuleError = error{
     ApplyNameError,
     GenerateModuleError,
     GetResultError,
+    WatParseError,
+};
+
+const Type = enum {
+    ToWat,
+    ToWasm,
 };
 
 module: *bindings.WabtModule,
 write_module: *bindings.WabtWriteModuleResult,
+module_type: Type,
 
-pub fn init(module: *bindings.WabtModule) !Module {
+pub fn init(module: *bindings.WabtModule, module_type: Type) Module {
     return .{
         .module = module,
         .write_module = bindings.wabt_write_binary_module(module, 0, 0, 0, 0),
+        .module_type = module_type,
     };
+}
+
+pub fn parseWat(filename: [*:0]const u8, wat: [*:0]const u8, features: *Features) !Module {
+    var lexer = Lexer.init(filename, wat);
+    defer lexer.deinit();
+    var result = try lexer.parseWat(features);
+    defer result.deinit();
+
+    const mod = bindings.wabt_parse_wat_result_release_module(result.raw);
+
+    return Module.init(mod, Type.ToWasm);
 }
 
 pub fn deinit(self: *Module) void {
@@ -60,12 +79,10 @@ pub fn wat2Wasm(self: *Module) ModuleError!Output {
 }
 
 test "wat2Wasm" {
-    var l = lexer.Lexer.init("test.wat", "(module)");
-    defer l.deinit();
-    var f = features.Features.init();
-    defer f.deinit();
+    var features = Features.init();
+    defer features.deinit();
 
-    var mod = try l.parseWat(&f);
+    var mod = try Module.parseWat("test.wat", "(module)", &features);
     defer mod.deinit();
 
     var out = try mod.wat2Wasm();

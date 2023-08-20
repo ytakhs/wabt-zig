@@ -19,6 +19,10 @@ const ParseWatResult = struct {
         };
     }
 
+    pub fn deinit(self: *Self) void {
+        bindings.wabt_destroy_parse_wat_result(self.raw);
+    }
+
     pub fn isOK(self: *Self) bool {
         return bindings.WabtResultEnum.Ok == self.result;
     }
@@ -45,7 +49,7 @@ pub fn deinit(self: *Lexer) void {
     self.errors.deinit();
 }
 
-pub fn parseWat(self: *Lexer, f: *features.Features) LexerError!module.Module {
+pub fn parseWat(self: *Lexer, f: *features.Features) LexerError!ParseWatResult {
     const parse_wat_result = bindings.wabt_parse_wat(self.raw, f.raw, self.errors.raw);
 
     var result = ParseWatResult.init(parse_wat_result);
@@ -53,9 +57,7 @@ pub fn parseWat(self: *Lexer, f: *features.Features) LexerError!module.Module {
         return LexerError.ParseWatError;
     }
 
-    const mod = bindings.wabt_parse_wat_result_release_module(result.raw);
-
-    return module.Module.init(mod);
+    return result;
 }
 
 test "parseWat" {
@@ -68,5 +70,5 @@ test "parseWat" {
 
     var result = try lexer.parseWat(&f);
 
-    try std.testing.expectEqualStrings("module", @typeName(@TypeOf(result)));
+    try std.testing.expectEqualStrings("lexer.ParseWatResult", @typeName(@TypeOf(result)));
 }
